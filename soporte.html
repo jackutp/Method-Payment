@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soporte | TransportePay</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/soporte.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container soporte-container">
+        <div class="formulario-card">
+            <h1>Soporte</h1>
+            
+            <div class="form-group">
+                <label>N° de Transacción</label>
+                <input type="text" placeholder="Ej: TP-789456">
+            </div>
+            
+            <div class="form-group">
+                <label>Descripción del Problema</label>
+                <textarea placeholder="Detalla tu reclamo..."></textarea>
+            </div>
+            
+            <div class="btn-group">
+                <button onclick="enviarReclamo()" class="confirm-btn">
+                    <i class="fas fa-paper-plane"></i> Enviar Reclamo
+                </button>
+                <button onclick="window.location.href='index.html'" class="secondary-btn">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function enviarReclamo() {
+            alert('Reclamo enviado. Nos contactaremos contigo en 24 horas.');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const methods = document.querySelectorAll('.method');
     const modal = document.getElementById('paymentModal');
     const closeModal = document.querySelector('.close');
@@ -17,22 +17,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const qrForm = document.getElementById('qrForm');
     const cashForm = document.getElementById('cashForm');
     const modalTitle = document.getElementById('modalTitle');
-    
+
     let selectedMethod = '';
     methods.forEach(method => {
-        method.addEventListener('click', function() {
+        method.addEventListener('click', function () {
             selectedMethod = this.getAttribute('data-method');
             openModal(selectedMethod);
         });
     });
-    
+
     function openModal(method) {
         modal.style.display = 'block';
         cardForm.style.display = 'none';
         qrForm.style.display = 'none';
         cashForm.style.display = 'none';
-        
-        switch(method) {
+
+        switch (method) {
             case 'debit':
             case 'credit':
             case 'mastercard':
@@ -44,28 +44,28 @@ document.addEventListener('DOMContentLoaded', function() {
                     cardLogo.className = method === 'credit' ? 'far fa-credit-card' : 'fas fa-credit-card';
                 }
                 break;
-                
+
             case 'yape':
             case 'plin':
                 modalTitle.textContent = `Pago con ${method.charAt(0).toUpperCase() + method.slice(1)}`;
                 qrForm.style.display = 'block';
                 break;
-                
+
             case 'cash':
                 modalTitle.textContent = 'Pago en Efectivo';
                 cashForm.style.display = 'block';
                 break;
         }
     }
-    closeModal.addEventListener('click', function() {
+    closeModal.addEventListener('click', function () {
         modal.style.display = 'none';
     });
-    
-    closeSuccess.addEventListener('click', function() {
+
+    closeSuccess.addEventListener('click', function () {
         successModal.style.display = 'none';
         modal.style.display = 'none';
     });
-    window.addEventListener('click', function(event) {
+    window.addEventListener('click', function (event) {
         if (event.target === modal) {
             modal.style.display = 'none';
         }
@@ -74,24 +74,27 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.style.display = 'none';
         }
     });
-    
-    confirmPaymentBtn.addEventListener('click', function() {
-        if (selectedMethod === 'debit' || selectedMethod === 'credit' || selectedMethod === 'mastercard') {
+
+    // En script.js, reemplaza el evento click de confirmPaymentBtn:
+    confirmPaymentBtn.addEventListener('click', function () {
+        if (selectedMethod === 'debit' || selectedMethod === 'credit') {
             if (validateCardForm()) {
                 setTimeout(() => {
                     modal.style.display = 'none';
-                    successModal.style.display = 'block';
+                    window.location.href = 'confirmacion.html?method=' + selectedMethod; // Redirige con parámetro
                 }, 1000);
             }
         } else {
-            modal.style.display = 'none';
-            successModal.style.display = 'block';
+            setTimeout(() => {
+                modal.style.display = 'none';
+                window.location.href = 'confirmacion.html?method=' + selectedMethod;
+            }, 1000);
         }
     });
-    
+
     function validateCardForm() {
         let isValid = true;
-        
+
         const cardNumber = cardNumberInput.value.replace(/\s/g, '');
         if (!/^\d{16}$/.test(cardNumber)) {
             document.getElementById('cardNumberError').textContent = 'El número de tarjeta debe tener 16 dígitos';
@@ -100,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             document.getElementById('cardNumberError').style.display = 'none';
         }
-        
+
         if (cardNameInput.value.trim() === '') {
             document.getElementById('cardNameError').textContent = 'Ingrese el nombre del titular';
             document.getElementById('cardNameError').style.display = 'block';
@@ -108,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             document.getElementById('cardNameError').style.display = 'none';
         }
-        
+
         if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDateInput.value)) {
             document.getElementById('expiryDateError').textContent = 'Formato inválido (MM/AA)';
             document.getElementById('expiryDateError').style.display = 'block';
@@ -116,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             document.getElementById('expiryDateError').style.display = 'none';
         }
-        
+
         if (!/^\d{3}$/.test(cvvInput.value)) {
             document.getElementById('cvvError').textContent = 'El CVV debe tener 3 dígitos';
             document.getElementById('cvvError').style.display = 'block';
@@ -124,41 +127,41 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             document.getElementById('cvvError').style.display = 'none';
         }
-        
+
         return isValid;
     }
-    
-    cardNumberInput.addEventListener('input', function(e) {
+
+    cardNumberInput.addEventListener('input', function (e) {
         let value = e.target.value.replace(/\s/g, '');
         if (value.length > 16) value = value.substring(0, 16);
-        
+
         let formattedValue = '';
         for (let i = 0; i < value.length; i++) {
             if (i > 0 && i % 4 === 0) formattedValue += ' ';
             formattedValue += value[i];
         }
-        
+
         e.target.value = formattedValue;
         cardNumberPreview.textContent = formattedValue || '#### #### #### ####';
     });
-    
-    cardNameInput.addEventListener('input', function(e) {
+
+    cardNameInput.addEventListener('input', function (e) {
         cardNamePreview.textContent = e.target.value.toUpperCase() || 'NOMBRE DEL TITULAR';
     });
-    
-    expiryDateInput.addEventListener('input', function(e) {
+
+    expiryDateInput.addEventListener('input', function (e) {
         let value = e.target.value.replace(/\D/g, '');
         if (value.length > 4) value = value.substring(0, 4);
-        
+
         if (value.length > 2) {
             value = value.substring(0, 2) + '/' + value.substring(2);
         }
-        
+
         e.target.value = value;
         cardExpiryPreview.textContent = value || 'MM/AA';
     });
-    
-    cvvInput.addEventListener('input', function(e) {
+
+    cvvInput.addEventListener('input', function (e) {
         e.target.value = e.target.value.replace(/\D/g, '').substring(0, 3);
     });
 });
